@@ -19,7 +19,7 @@ namespace Passbook.Sample.Web.Controllers
             return View();
         }
       
-        public string getToken() {
+        public string token() {
 
             Task<string> tokenTask = GetPhoneIdAsync("0975660363");
 
@@ -265,6 +265,8 @@ namespace Passbook.Sample.Web.Controllers
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.gihub.v3+json"));
+            //client.DefaultRequestHeaders.Accept.Add(
+            //    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json; charset=utf-8"));
             client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
 
             String urlString = "https://https://app2.ntpd.gov.tw/Develop/GetAppUser?PhoneNo=" + phoneNumber;
