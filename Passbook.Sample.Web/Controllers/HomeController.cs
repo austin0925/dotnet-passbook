@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace Passbook.Sample.Web.Controllers
@@ -17,13 +20,6 @@ namespace Passbook.Sample.Web.Controllers
         public ActionResult Index()
         {
             return View();
-        }
-      
-        public string token() {
-
-            Task<string> tokenTask = GetPhoneIdAsync("0975660363");
-
-            return tokenTask.GetAwaiter().GetResult();
         }
 
         public string police() {
@@ -222,7 +218,7 @@ namespace Passbook.Sample.Web.Controllers
         /// <param name="chain"></param>
         /// <param name="sslPolicyErrors"></param>
         /// <returns></returns>
-        public static bool ValidateServerCertificate(
+        protected static bool ValidateServerCertificate(
               object sender,
               X509Certificate certificate,
               X509Chain chain,
@@ -240,7 +236,7 @@ namespace Passbook.Sample.Web.Controllers
         /// 提供給sendMsg方法所使用，可以快速列印出byte的內容(DEBUG用)
         /// </summary>
         /// <param name="bytes"></param>
-        public static void WriteMultiLineByteArray(byte[] bytes)
+        protected static void WriteMultiLineByteArray(byte[] bytes)
         {
             const int rowSize = 20;
             int iter;
@@ -259,29 +255,9 @@ namespace Passbook.Sample.Web.Controllers
             Console.WriteLine();
         }
 
-        private static async Task<string> GetPhoneIdAsync(String phoneNumber) {
-
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.gihub.v3+json"));
-            //client.DefaultRequestHeaders.Accept.Add(
-            //    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json; charset=utf-8"));
-            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
-
-            String urlString = "https://https://app2.ntpd.gov.tw/Develop/GetAppUser?PhoneNo=" + phoneNumber;
-
-            Console.WriteLine(urlString);
-
-            var stringTask = client.GetStringAsync(urlString);
-            var msg = await stringTask;
-            Console.WriteLine(msg);
-
-            return msg;
-        }
     }
-
-    public class AppUser
+    
+    class AppUser
     {
         public string PUserNo { set; get; }
         public string PhoneNo { set; get; }
@@ -292,5 +268,14 @@ namespace Passbook.Sample.Web.Controllers
         public string LastDT { get; set; }
         public string VerifyCode { get; set; }
         public string isVerify { get; set; }
+
+        public string inString()
+        {
+            return
+                ",PUserNo:"+ PUserNo +
+                ",PhoneNo:"+ PhoneNo +
+                "";
+
+        }
     }
 }
